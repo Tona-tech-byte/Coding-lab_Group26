@@ -2,6 +2,11 @@
 
 # Extracts Timestamp, Device_ID, and Value for every CRITICAL reading
 process_vitals() {
+    if [ ! -f active_logs/heart_rate_log.log ] || [ ! -f active_logs/temperature_log.log ]; then
+        echo "Error: log files not found in active_logs/"
+        return 1
+    fi
+
     grep -h "CRITICAL" active_logs/heart_rate_log.log active_logs/temperature_log.log | \
     awk -F'|' '{print $1, $2, $3}' >> reports/critical_alerts.txt
     echo "Critical alerts saved to reports/critical_alerts.txt"
